@@ -39,6 +39,16 @@ app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awa
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
+app.get('/pet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let filter = queryString(req.query);
+    let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
+    console.log(url);
+    let r = yield fetch(url);
+    let data = yield r.json();
+    return res.status(200).json(data);
+    // let resData = await getPets(filter, pageSize, page);
+    // return res.status(200).json(resData);
+}));
 function isUrl(_a) {
     return __awaiter(this, arguments, void 0, function* ({ url, pageSize, page }) {
         let res = yield (0, routes_1.mainReq)(url, pageSize, page);
@@ -55,3 +65,13 @@ function isFile(_a) {
     });
 }
 app.listen(3000, () => console.log('listening on port 3000!'));
+const queryString = (params) => Object.entries(params)
+    .map(([key, value]) => {
+    if (!value)
+        return undefined;
+    if (Array.isArray(value)) {
+        return `${key}=${value.join(',')}`;
+    }
+    return `${key}=${value}`;
+})
+    .join('&');

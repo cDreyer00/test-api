@@ -9,15 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.routes = void 0;
 exports.submitImageFile = submitImageFile;
 exports.mainReq = mainReq;
 exports.getPets = getPets;
-exports.routes = [
-    '/home',
-    '/about',
-    '/contact',
-];
 let folderId = '1R3jyhPo18MrfG-G5xChAAdkmamRxRyad';
 function submitImageFile(file) {
     return __awaiter(this, void 0, void 0, function* () {
