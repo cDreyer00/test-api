@@ -22,7 +22,7 @@ app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awa
     console.log("sending req");
     try {
         let { image, pageSize, pageNumber } = req.body;
-        console.log(req.body);
+        console.log({ image, pageSize, pageNumber });
         if (image) {
             let resData = yield isUrl({ url: image, pageSize, pageNumber });
             return res.status(200).json(resData);
@@ -59,9 +59,8 @@ function isUrl(_a) {
 }
 function isFile(_a) {
     return __awaiter(this, arguments, void 0, function* ({ file, pageSize, pageNumber }) {
-        console.log('file received ', file);
         let imgUrl = yield (0, routes_1.submitImageFile)(file);
-        console.log(imgUrl);
+        console.log("2 -", { imgUrl, pageSize, pageNumber });
         let res = yield (0, routes_1.mainReq)(imgUrl, pageSize, pageNumber);
         return res;
     });

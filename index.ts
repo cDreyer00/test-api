@@ -9,10 +9,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/submit', uploads.single('image'), async (req, res) => {
-   console.log("sending req");
    try {
       let { image, pageSize, pageNumber } = req.body;
-      console.log(req.body);
+      console.log('submit:',
+         { image, pageSize, pageNumber });
 
       if (image) {
          let resData = await isUrl({ url: image, pageSize, pageNumber });
@@ -54,9 +54,8 @@ async function isUrl({ url, pageSize, pageNumber }: any) {
 }
 
 async function isFile({ file, pageSize, pageNumber }: any) {
-   console.log('file received ', file);
    let imgUrl = await submitImageFile(file);
-   console.log(imgUrl);
+   console.log("2 -", { imgUrl, pageSize, pageNumber });
    let res = await mainReq(imgUrl, pageSize, pageNumber);
    return res;
 }
