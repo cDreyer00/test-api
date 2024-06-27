@@ -11,18 +11,18 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/submit', uploads.single('image'), async (req, res) => {
    console.log("sending req");
    try {
-      let { image, pageSize, page } = req.body;
+      let { image, pageSize, pageNumber } = req.body;
       console.log(req.body);
 
       if (image) {
-         let resData = await isUrl({ url: image, pageSize, page });
+         let resData = await isUrl({ url: image, pageSize, pageNumber });
          return res.status(200).json(resData);
       }
 
       let file = req.file;
 
       if (file) {
-         let resData = await isFile({ file, pageSize, page });
+         let resData = await isFile({ file, pageSize, pageNumber });
          return res.status(200).json(resData);
       }
 
@@ -36,6 +36,7 @@ app.post('/submit', uploads.single('image'), async (req, res) => {
 
 app.get('/pet', async (req: Request, res: Response) => {
    let filter = queryString(req.query);
+   console.log(filter);
    let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
    console.log(url);
    let r = await fetch(url);
@@ -46,20 +47,21 @@ app.get('/pet', async (req: Request, res: Response) => {
 });
 
 
-async function isUrl({ url, pageSize, page }: any) {
-   let res = await mainReq(url, pageSize, page);
+async function isUrl({ url, pageSize, pageNumber }: any) {
+   console.log('url received pg number: ', pageNumber);
+   let res = await mainReq(url, pageSize, pageNumber);
    return res;
 }
 
-async function isFile({ file, pageSize, page }: any) {
+async function isFile({ file, pageSize, pageNumber }: any) {
    console.log('file received ', file);
    let imgUrl = await submitImageFile(file);
    console.log(imgUrl);
-   let res = await mainReq(imgUrl, pageSize, page);
+   let res = await mainReq(imgUrl, pageSize, pageNumber);
    return res;
 }
 
-app.listen(3000, () => console.log('listening on port 3000!'))
+app.listen(3000, () => console.log('listening on http://localhost:3000'));
 
 const queryString = (params: Object) => Object.entries(params)
    .map(([key, value]) => {

@@ -21,15 +21,15 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("sending req");
     try {
-        let { image, pageSize, page } = req.body;
+        let { image, pageSize, pageNumber } = req.body;
         console.log(req.body);
         if (image) {
-            let resData = yield isUrl({ url: image, pageSize, page });
+            let resData = yield isUrl({ url: image, pageSize, pageNumber });
             return res.status(200).json(resData);
         }
         let file = req.file;
         if (file) {
-            let resData = yield isFile({ file, pageSize, page });
+            let resData = yield isFile({ file, pageSize, pageNumber });
             return res.status(200).json(resData);
         }
         return res.status(400).json({ error: 'Invalid Request' });
@@ -41,6 +41,7 @@ app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awa
 }));
 app.get('/pet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let filter = queryString(req.query);
+    console.log(filter);
     let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
     console.log(url);
     let r = yield fetch(url);
@@ -50,21 +51,22 @@ app.get('/pet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // return res.status(200).json(resData);
 }));
 function isUrl(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ url, pageSize, page }) {
-        let res = yield (0, routes_1.mainReq)(url, pageSize, page);
+    return __awaiter(this, arguments, void 0, function* ({ url, pageSize, pageNumber }) {
+        console.log('url received pg number: ', pageNumber);
+        let res = yield (0, routes_1.mainReq)(url, pageSize, pageNumber);
         return res;
     });
 }
 function isFile(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ file, pageSize, page }) {
+    return __awaiter(this, arguments, void 0, function* ({ file, pageSize, pageNumber }) {
         console.log('file received ', file);
         let imgUrl = yield (0, routes_1.submitImageFile)(file);
         console.log(imgUrl);
-        let res = yield (0, routes_1.mainReq)(imgUrl, pageSize, page);
+        let res = yield (0, routes_1.mainReq)(imgUrl, pageSize, pageNumber);
         return res;
     });
 }
-app.listen(3000, () => console.log('listening on port 3000!'));
+app.listen(3000, () => console.log('listening on http://localhost:3000'));
 const queryString = (params) => Object.entries(params)
     .map(([key, value]) => {
     if (!value)
