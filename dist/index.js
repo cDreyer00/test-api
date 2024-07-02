@@ -19,10 +19,9 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("sending req");
     try {
         let { image, pageSize, pageNumber } = req.body;
-        console.log({ image, pageSize, pageNumber });
+        console.log('submit:', { image, pageSize, pageNumber });
         if (image) {
             let resData = yield isUrl({ url: image, pageSize, pageNumber });
             return res.status(200).json(resData);
@@ -41,9 +40,9 @@ app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awa
 }));
 app.get('/pet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let filter = queryString(req.query);
-    console.log(filter);
+    console.log("get pets:", { query: req.query, filter });
     let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
-    console.log(url);
+    console.log("url: ", url);
     let r = yield fetch(url);
     let data = yield r.json();
     return res.status(200).json(data);
@@ -52,7 +51,7 @@ app.get('/pet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 function isUrl(_a) {
     return __awaiter(this, arguments, void 0, function* ({ url, pageSize, pageNumber }) {
-        console.log('url received pg number: ', pageNumber);
+        console.log("As Url - submit Request, params: ", { url, pageSize, pageNumber });
         let res = yield (0, routes_1.mainReq)(url, pageSize, pageNumber);
         return res;
     });
@@ -60,7 +59,7 @@ function isUrl(_a) {
 function isFile(_a) {
     return __awaiter(this, arguments, void 0, function* ({ file, pageSize, pageNumber }) {
         let imgUrl = yield (0, routes_1.submitImageFile)(file);
-        console.log("2 -", { imgUrl, pageSize, pageNumber });
+        console.log("As File - submit Request, params: ", { imgUrl, pageSize, pageNumber });
         let res = yield (0, routes_1.mainReq)(imgUrl, pageSize, pageNumber);
         return res;
     });

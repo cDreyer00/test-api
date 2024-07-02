@@ -36,9 +36,9 @@ app.post('/submit', uploads.single('image'), async (req, res) => {
 
 app.get('/pet', async (req: Request, res: Response) => {
    let filter = queryString(req.query);
-   console.log(filter);
+   console.log("get pets:", {query: req.query, filter});
    let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
-   console.log(url);
+   console.log("url: ", url);
    let r = await fetch(url);
    let data = await r.json();
    return res.status(200).json(data);
@@ -48,14 +48,14 @@ app.get('/pet', async (req: Request, res: Response) => {
 
 
 async function isUrl({ url, pageSize, pageNumber }: any) {
-   console.log('url received pg number: ', pageNumber);
+   console.log("As Url - submit Request, params: ", { url, pageSize, pageNumber });
    let res = await mainReq(url, pageSize, pageNumber);
    return res;
 }
 
 async function isFile({ file, pageSize, pageNumber }: any) {
    let imgUrl = await submitImageFile(file);
-   console.log("2 -", { imgUrl, pageSize, pageNumber });
+   console.log("As File - submit Request, params: ", { imgUrl, pageSize, pageNumber });
    let res = await mainReq(imgUrl, pageSize, pageNumber);
    return res;
 }
