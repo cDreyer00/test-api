@@ -12,21 +12,21 @@ app.post('/submit', uploads.single('image'), async (req, res) => {
    try {
       let { image, pageSize, pageNumber } = req.body;
       console.log('submit:',
-         { image, pageSize, pageNumber });
+         { pageSize, pageNumber });
 
-      if (image) {
-         let resData = await isUrl({ url: image, pageSize, pageNumber });
-         return res.status(200).json(resData);
-      }
+      // if (image) {
+      //    let resData = await isUrl({ url: image, pageSize, pageNumber });
+      //    return res.status(200).json(resData);
+      // }
 
       let file = req.file;
 
-      if (file) {
-         let resData = await isFile({ file, pageSize, pageNumber });
-         return res.status(200).json(resData);
-      }
+      if (!file)
+         return res.status(400).json({ error: 'Invalid Request: No Image provided' });
 
-      return res.status(400).json({ error: 'Invalid Request' });
+      let resData = await isFile({ file, pageSize, pageNumber });
+      return res.status(200).json(resData);
+      // return res.status(400).json({ error: 'Invalid Request' });
 
    } catch (error) {
       console.log(error);
@@ -36,7 +36,7 @@ app.post('/submit', uploads.single('image'), async (req, res) => {
 
 app.get('/pet', async (req: Request, res: Response) => {
    let filter = queryString(req.query);
-   console.log("get pets:", {query: req.query, filter});
+   console.log("get pets:", { query: req.query, filter });
    let url = `https://encontreja-ai.vercel.app/api/pet?${filter}`;
    console.log("url: ", url);
    let r = await fetch(url);
@@ -64,7 +64,7 @@ app.listen(3000, () => console.log('listening on http://localhost:3000'));
 
 const queryString = (params: Object) => Object.entries(params)
    .map(([key, value]) => {
-      if(!value) return undefined;
+      if (!value) return undefined;
       if (Array.isArray(value)) {
          return `${key}=${value.join(',')}`
       }

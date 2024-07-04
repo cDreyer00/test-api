@@ -21,17 +21,17 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.post('/submit', multer_config_1.default.single('image'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { image, pageSize, pageNumber } = req.body;
-        console.log('submit:', { image, pageSize, pageNumber });
-        if (image) {
-            let resData = yield isUrl({ url: image, pageSize, pageNumber });
-            return res.status(200).json(resData);
-        }
+        console.log('submit:', { pageSize, pageNumber });
+        // if (image) {
+        //    let resData = await isUrl({ url: image, pageSize, pageNumber });
+        //    return res.status(200).json(resData);
+        // }
         let file = req.file;
-        if (file) {
-            let resData = yield isFile({ file, pageSize, pageNumber });
-            return res.status(200).json(resData);
-        }
-        return res.status(400).json({ error: 'Invalid Request' });
+        if (!file)
+            return res.status(400).json({ error: 'Invalid Request: No Image provided' });
+        let resData = yield isFile({ file, pageSize, pageNumber });
+        return res.status(200).json(resData);
+        // return res.status(400).json({ error: 'Invalid Request' });
     }
     catch (error) {
         console.log(error);
